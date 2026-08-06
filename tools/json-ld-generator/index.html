@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JSON-LD Studio — Structured data without the guesswork | Nymrel Tools</title>
+<meta name="description" content="Generate schema.org JSON-LD for LocalBusiness, Product, FAQs and more, or check code you already have. Free, runs entirely in your browser.">
+<link rel="canonical" href="https://nymrel.com/tools/json-ld-generator">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nymrel Tools">
+<meta property="og:title" content="JSON-LD Studio — Structured data without the guesswork">
+<meta property="og:description" content="Generate schema.org JSON-LD for LocalBusiness, Product, FAQs and more, or check code you already have. Free, no sign-up.">
+<meta property="og:url" content="https://nymrel.com/tools/json-ld-generator">
+<meta property="og:image" content="https://nymrel.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JSON-LD Studio — Structured data without the guesswork">
+<meta name="twitter:description" content="Generate schema.org JSON-LD for LocalBusiness, Product, FAQs and more, or check code you already have. Free, no sign-up.">
+<meta name="twitter:image" content="https://nymrel.com/assets/og.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preload" href="/assets/fonts/instrumentserif-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/instrumentsans-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "JSON-LD Studio",
+      "url": "https://nymrel.com/tools/json-ld-generator",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web browser",
+      "description": "Generate schema.org JSON-LD for LocalBusiness, Product, FAQPage, and Person pages, or check JSON-LD you already have for errors. Runs entirely in the browser.",
+      "publisher": {
+        "@id": "https://nymrel.com/#organization"
+      },
+      "offers": [
+        {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "name": "Free"
+        },
+        {
+          "@type": "Offer",
+          "price": "19",
+          "priceCurrency": "USD",
+          "name": "Pro"
+        }
+      ],
+      "creator": {
+        "@id": "https://nymrel.com/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://nymrel.com/tools"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "JSON-LD Studio",
+          "item": "https://nymrel.com/tools/json-ld-generator"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is my data safe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Everything runs in your browser — the JSON-LD you generate or paste is never sent to a server or stored anywhere but your own device."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need to know JSON to use this?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Pick a schema type, fill in plain fields, and the tool writes correct JSON-LD for you. You only need to know JSON if you want to."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I add the code to my page?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Copy the generated script block and paste it anywhere inside your page's <head>. Google and AI assistants read it automatically — no other setup."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does the Check mode actually check?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It confirms your JSON is valid, has @context and @type set, and has the fields search engines expect for that type — like offers.price on a Product or acceptedAnswer.text on an FAQPage."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What do I get with Pro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Pro studio opens on the page — all 10 schema types, saved presets, and bulk checking — and you also download the whole thing as one .html file that runs offline with no account."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  .mode-switch {
+    display: flex; gap: 4px; padding: 4px; margin-bottom: 1.1rem;
+    background: var(--bg-deep); border: 1px solid var(--line-strong); border-radius: 10px;
+  }
+  .mode-btn {
+    flex: 1; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.06em;
+    padding: 9px 14px; border-radius: 7px; border: 1px solid transparent;
+    background: transparent; color: var(--ink-dim); cursor: pointer; text-transform: uppercase;
+    transition: background 0.15s, color 0.15s;
+  }
+  .mode-btn.active { background: var(--accent); color: #14100a; font-weight: 600; }
+  .mode-btn:hover:not(.active) { color: var(--ink); }
+  .tag.bad { border-color: color-mix(in srgb, var(--bad) 60%, transparent); color: var(--bad); }
+  .tag.warn { border-color: color-mix(in srgb, var(--warn) 55%, transparent); color: var(--warn); }
+  .check-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .check-item:last-child { border-bottom: 0; }
+  .check-item .tag { flex-shrink: 0; width: 54px; text-align: center; }
+  .check-item .body .label { color: var(--ink); font-size: 0.92rem; }
+  .check-item .body .detail { color: var(--ink-faint); font-size: 0.82rem; margin-top: 3px; }
+  .check-item .body .fix { color: var(--ink-dim); font-size: 0.82rem; margin-top: 4px; }
+  .faq-pair { border: 1px solid var(--line); border-radius: 8px; padding: 14px 14px 2px; margin-bottom: 12px; position: relative; }
+  .faq-pair .faqRemove { position: absolute; top: 10px; right: 10px; }
+  #genFields .field:last-child, .faq-pair .field:last-child { margin-bottom: 0.8rem; }
+  .bench-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .bench-actions { display: inline-flex; gap: 8px; }
+  .bench-actions .btn { padding: 6px 12px; font-size: 0.68rem; }
+  .bench-actions .btn svg { width: 13px; height: 13px; }
+  @media (max-width: 900px) { .bench-actions { display: none; } }
+  .pc-faq { border: none; }
+  .pc-faq summary { list-style: none; cursor: pointer; }
+  .pc-faq summary::-webkit-details-marker { display: none; }
+  .pc-faq summary::before { content: "▸ "; color: #5f5b52; }
+  .pc-faq[open] summary::before { content: "▾ "; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","@id":"https://nymrel.com/#organization","email":"contact@nymrel.com","legalName":"JalenBuilds LLC","name":"Nymrel","url":"https://nymrel.com"}
+</script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body data-tool="jsonld" data-pro-product="jsonld-pro" data-pro-module="jsonld-pro">
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">◆</span> nymrel<span class="sub">/ tool works</span></a>
+    <nav class="primary" aria-label="Primary">
+      <a href="/tools/ai-visibility-scorecard/">Scorecard</a>
+      <a href="/tools/llms-txt-generator/">llms.txt</a>
+      <a href="/tools/json-ld-generator/" class="active">JSON-LD</a>
+      <a href="/tools/qr-utm-generator/">QR + UTM</a>
+      <a href="/tools/token-spend-dashboard/">Token Ledger</a>
+      <a href="/tools/chatgpt-recommends/">ChatGPT Check</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <nav class="crumbs wrap"><a href="/">Tools</a> <span class="sep">/</span> JSON-LD Studio</nav>
+
+  <section class="hero" style="padding: 3.5rem 0 3rem">
+    <div class="wrap">
+      <div class="kicker">JalenBuilds · JSON-LD Studio</div>
+      <div class="hero-glyph">
+        <div class="tool-glyph" aria-hidden="true">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 10 L7 24 L16 38"/>
+            <path d="M32 10 L41 24 L32 38"/>
+            <rect x="19" y="19" width="10" height="10"/>
+            <circle cx="19" cy="19" r="1.4" fill="currentColor" stroke="none"/>
+            <circle cx="29" cy="29" r="1.4" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+      </div>
+      <h1 style="max-width: 12em">Structured data without the guesswork.</h1>
+      <p class="lede">Generate schema.org JSON-LD for a business, product, FAQ, or bio — or paste code you already have and see exactly what's missing. No JSON to write by hand, no guessing what Google wants.</p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="workbench">
+      <div class="controls">
+        <div class="hint-once" id="hintOnce" style="display:none">
+          <span>Pick a type, fill what you know — empty fields are simply left out.</span>
+          <button type="button" class="hx" id="hintCloseBtn" aria-label="Dismiss hint">×</button>
+        </div>
+
+        <div class="mode-switch" role="tablist" aria-label="Tool mode">
+          <button type="button" class="mode-btn active" id="modeGenBtn" role="tab" aria-selected="true" aria-controls="genPanel">Generate</button>
+          <button type="button" class="mode-btn" id="modeCheckBtn" role="tab" aria-selected="false" aria-controls="checkPanel">Check</button>
+        </div>
+
+        <button type="button" class="try-btn" id="tryExampleBtn" style="margin-bottom:1.2rem">Try an example</button>
+
+        <div id="genPanel" role="tabpanel" aria-labelledby="modeGenBtn">
+          <label class="field">
+            <span class="lab">What are you describing?<span class="code-chip">@type</span></span>
+            <select id="schemaType">
+              <option value="LocalBusiness">LocalBusiness</option>
+              <option value="Product">Product</option>
+              <option value="FAQPage">FAQPage</option>
+              <option value="Person">Person</option>
+              <option value="Organization" disabled>Organization — Pro</option>
+              <option value="Article" disabled>Article — Pro</option>
+              <option value="Event" disabled>Event — Pro</option>
+              <option value="HowTo" disabled>HowTo — Pro</option>
+            </select>
+          </label>
+          <div id="genFields"></div>
+        </div>
+
+        <div id="checkPanel" style="display:none" role="tabpanel" aria-labelledby="modeCheckBtn">
+          <label class="field">
+            <span class="lab">Paste the code you want checked<span class="code-chip">JSON-LD</span></span>
+            <textarea id="checkInput" rows="16" placeholder='Paste raw JSON, or a full &lt;script type="application/ld+json"&gt;…&lt;/script&gt; block'></textarea>
+          </label>
+          <button type="button" class="btn btn-primary" id="checkBtn">Check code</button>
+        </div>
+      </div>
+
+      <div class="output">
+        <div class="bench-head">
+          <span><span class="dot"></span>Output</span>
+          <span class="bench-meta">
+            <span id="outMeta" class="mono"></span>
+            <span class="tag brass" id="exampleBadge" style="display:none"></span>
+            <span class="bench-actions" id="benchActions"></span>
+          </span>
+        </div>
+        <div id="outBody">
+          <div style="padding:1.3rem">
+            <p style="color:var(--ink-faint);margin:0">Enter a business name to generate JSON-LD.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="kicker">How it works</div>
+    <h2 style="margin-bottom:1.5rem">Three steps, no syntax</h2>
+    <div class="grid-3">
+      <div class="panel">
+        <div class="lab">Step 1</div>
+        <h3>Pick a type</h3>
+        <p style="color:var(--ink-dim);margin:0">Choose LocalBusiness, Product, FAQPage, or Person — the four schema.org types that cover most pages.</p>
+      </div>
+      <div class="panel">
+        <div class="lab">Step 2</div>
+        <h3>Fill plain fields</h3>
+        <p style="color:var(--ink-dim);margin:0">Name, price, address, questions — normal form fields. The tool writes the JSON syntax for you.</p>
+      </div>
+      <div class="panel">
+        <div class="lab">Step 3</div>
+        <h3>Copy or download</h3>
+        <p style="color:var(--ink-dim);margin:0">Paste the script block into your page's &lt;head&gt;. Already have JSON-LD? Switch to Check instead.</p>
+      </div>
+    </div>
+  </section>
+
+  <section data-pro-strip class="section wrap">
+    <div class="kicker">Pricing</div>
+    <h2 style="margin-bottom:1.5rem">Free tier does real work</h2>
+    <div class="pricing">
+      <div class="price-card">
+        <div class="tier">Free</div>
+        <div class="amount">$0</div>
+        <ul>
+          <li>Generate LocalBusiness, Product, FAQPage, Person</li>
+          <li>Check any JSON-LD for errors and warnings</li>
+          <li>Copy or download the script block instantly</li>
+          <li>Runs entirely in your browser — nothing sent anywhere</li>
+        </ul>
+      </div>
+      <div class="price-card featured">
+        <div class="tier">Pro</div>
+        <div class="amount">$19 <small>one-time</small></div>
+        <ul>
+          <li>Offline single-file version of the studio — one .html file, no internet needed</li>
+          <li>All 10 schema types — adds Organization, Article, Event, HowTo, BreadcrumbList, WebSite</li>
+          <li>Reusable saved presets for repeat pages</li>
+          <li>Bulk checking — paste a whole page, every block gets its own report</li>
+          <li>Unlocks on this page and downloads right after checkout</li>
+        </ul>
+        <button class="btn btn-primary" data-buy="jsonld-pro">Get Pro — $19</button>
+        <p class="help" style="color:var(--ink-faint);font-size:0.85rem;margin:0.9rem 0 0">Fill in your schema fields above first — Pro builds from your own input right in your browser.</p>
+      </div>
+    </div>
+  </section>
+
+  <section data-pro-strip class="section wrap">
+    <div class="kicker">Questions, answered plainly</div>
+    <h2 style="margin-bottom:1.5rem">Before you ask</h2>
+    <div class="faq">
+      <details>
+        <summary>Is my data safe?</summary>
+        <p class="a">Yes. Everything runs in your browser — the JSON-LD you generate or paste is never sent to a server or stored anywhere but your own device.</p>
+      </details>
+      <details>
+        <summary>Do I need to know JSON to use this?</summary>
+        <p class="a">No. Pick a schema type, fill in plain fields, and the tool writes correct JSON-LD for you. You only need to know JSON if you want to.</p>
+      </details>
+      <details>
+        <summary>How do I add the code to my page?</summary>
+        <p class="a">Copy the generated script block and paste it anywhere inside your page's &lt;head&gt;. Google and AI assistants read it automatically — no other setup.</p>
+      </details>
+      <details>
+        <summary>What does the Check mode actually check?</summary>
+        <p class="a">It confirms your JSON is valid, has @context and @type set, and has the fields search engines expect for that type — like offers.price on a Product or acceptedAnswer.text on an FAQPage.</p>
+      </details>
+      <details>
+        <summary>What do I get with Pro?</summary>
+        <p class="a">The Pro studio opens on this page — all 10 schema types, saved presets, and bulk checking — and you also download the whole thing as one .html file that runs offline, forever, with no account.</p>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <p class="fh">Nymrel Tools</p>
+      <p style="max-width:26em">Small, sharp tools from a working studio. Everything runs in your browser; nothing you paste leaves your device.</p>
+      <p class="mono" style="font-size:0.78rem">© <span data-year>2026</span> JalenBuilds LLC</p>
+      <p class="mono" style="font-size:0.78rem"><a href="https://nymrel.com?utm_source=jalenbuilds-tools&amp;utm_medium=footer-credit&amp;utm_campaign=built-by-nymrel" rel="author">Built by Nymrel</a></p>
+    </div>
+    <div>
+      <p class="fh">Catalog</p>
+      <ul>
+        <li><a href="/tools/ai-visibility-scorecard/">AI Visibility Scorecard</a></li>
+        <li><a href="/tools/llms-txt-generator/">llms.txt Generator</a></li>
+        <li><a href="/tools/json-ld-generator/">JSON-LD Studio</a></li>
+        <li><a href="/tools/qr-utm-generator/">QR + UTM Studio</a></li>
+        <li><a href="/tools/token-spend-dashboard/">Token Ledger</a></li>
+        <li><a href="/tools/chatgpt-recommends/">ChatGPT Check</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="fh">Studio</p>
+      <ul>
+        <li><a href="mailto:contact@nymrel.com">contact@nymrel.com</a></li>
+        <li><a href="/llms.txt">llms.txt</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<div class="action-bar" id="actionBar" style="display:none" aria-label="Quick actions"></div>
+
+<script src="/assets/checkout-config.js"></script>
+<script src="/assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* ---------------- helpers ---------------- */
+  function escapeHtml(s) {
+    return String(s === null || s === undefined ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  var escapeAttr = escapeHtml;
+
+  function readField(id) {
+    var el = document.getElementById(id);
+    return el ? el.value.trim() : "";
+  }
+
+  function linesToArray(text) {
+    if (!text) return [];
+    return text.split("\n").map(function (s) { return s.trim(); }).filter(function (s) { return s.length; });
+  }
+
+  var ICON_COPY = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
+  var ICON_DOWNLOAD = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 3v12"/><path d="M6 11l6 6 6-6"/><path d="M4 21h16"/></svg>';
+  var ICON_CHECK = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 12l5 6L20 5"/></svg>';
+
+  function toolGlyphHtml() {
+    return '<div class="tool-glyph" aria-hidden="true"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">' +
+      '<path d="M16 10 L7 24 L16 38"/><path d="M32 10 L41 24 L32 38"/>' +
+      '<rect x="19" y="19" width="10" height="10"/>' +
+      '<circle cx="19" cy="19" r="1.4" fill="currentColor" stroke="none"/>' +
+      '<circle cx="29" cy="29" r="1.4" fill="currentColor" stroke="none"/></svg></div>';
+  }
+
+  /* ---------------- field definitions (free types only) ---------------- */
+  var FIELD_DEFS = {
+    LocalBusiness: [
+      { id: "f_name", label: "What's the business called? *", chip: "name", type: "text", ph: "Example Coffee Co.", required: true },
+      { id: "f_description", label: "Describe it in a line or two", chip: "description", type: "textarea", ph: "Short description of the business" },
+      { id: "f_url", label: "Where's the website?", chip: "url", type: "url", ph: "https://example.com" },
+      { id: "f_phone", label: "Best phone number", chip: "telephone", type: "text", ph: "+1 555 123 4567" },
+      { id: "f_street", label: "Street address", chip: "streetAddress", type: "text", ph: "123 Main St" },
+      { id: "f_city", label: "City", chip: "addressLocality", type: "text", ph: "Springfield" },
+      { id: "f_region", label: "State / region", chip: "addressRegion", type: "text", ph: "IL" },
+      { id: "f_postal", label: "Postal code", chip: "postalCode", type: "text", ph: "62704" },
+      { id: "f_country", label: "Country", chip: "addressCountry", type: "text", ph: "US" },
+      { id: "f_hours", label: "When are you open?", chip: "openingHours", type: "text", ph: "Mo-Fr 09:00-17:00" },
+      { id: "f_pricerange", label: "Price range", chip: "priceRange", type: "select", options: [["", "— none —"], ["$", "$"], ["$$", "$$"], ["$$$", "$$$"], ["$$$$", "$$$$"]] },
+      { id: "f_sameas", label: "Social / profile links (one per line)", chip: "sameAs", type: "textarea", ph: "https://instagram.com/example" }
+    ],
+    Product: [
+      { id: "f_name", label: "What's the product called? *", chip: "name", type: "text", ph: "Trail Runner 2.0", required: true },
+      { id: "f_description", label: "Describe it in a line or two", chip: "description", type: "textarea" },
+      { id: "f_image", label: "Photo URL", chip: "image", type: "url", ph: "https://example.com/image.jpg" },
+      { id: "f_brand", label: "Brand", chip: "brand", type: "text", ph: "Acme" },
+      { id: "f_price", label: "What's it cost? *", chip: "offers.price", type: "number", ph: "49.00", required: true },
+      { id: "f_currency", label: "Currency", chip: "offers.priceCurrency", type: "text", ph: "USD", value: "USD" },
+      { id: "f_availability", label: "In stock?", chip: "offers.availability", type: "select", options: [["", "— none —"], ["InStock", "In stock"], ["OutOfStock", "Out of stock"], ["PreOrder", "Pre-order"]] },
+      { id: "f_producturl", label: "Where can people buy it?", chip: "offers.url", type: "url", ph: "https://example.com/product" }
+    ],
+    Person: [
+      { id: "f_name", label: "Full name *", chip: "name", type: "text", ph: "Jane Doe", required: true },
+      { id: "f_jobtitle", label: "Job title", chip: "jobTitle", type: "text", ph: "Founder" },
+      { id: "f_company", label: "Company", chip: "worksFor", type: "text", ph: "Acme Inc." },
+      { id: "f_url", label: "Personal site or profile", chip: "url", type: "url", ph: "https://example.com" },
+      { id: "f_image", label: "Photo URL", chip: "image", type: "url", ph: "https://example.com/photo.jpg" },
+      { id: "f_email", label: "Email", chip: "email", type: "email", ph: "jane@example.com" },
+      { id: "f_sameas", label: "Social / profile links (one per line)", chip: "sameAs", type: "textarea", ph: "https://linkedin.com/in/example" }
+    ]
+  };
+
+  var FREE_TYPES = ["LocalBusiness", "Product", "FAQPage", "Person"];
+
+  /* ---------------- localStorage ---------------- */
+  function loadFieldsStore() {
+    try {
+      var raw = localStorage.getItem("jbt.jsonld.fields");
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+
+  function persistState() {
+    try {
+      localStorage.setItem("jbt.jsonld.mode", currentMode);
+      var type = document.getElementById("schemaType").value;
+      localStorage.setItem("jbt.jsonld.type", type);
+      if (FIELD_DEFS[type]) {
+        var vals = {};
+        FIELD_DEFS[type].forEach(function (f) { vals[f.id] = readField(f.id); });
+        var all = loadFieldsStore();
+        all[type] = vals;
+        localStorage.setItem("jbt.jsonld.fields", JSON.stringify(all));
+      }
+      localStorage.setItem("jbt.jsonld.faq", JSON.stringify(faqPairs));
+    } catch (e) { /* localStorage unavailable — ignore */ }
+  }
+
+  /* ---------------- validation ---------------- */
+  function requiredMsg(f) {
+    if (f.id === "f_price") return "Price is required for a Product listing.";
+    return "This one's required — it becomes the title.";
+  }
+
+  function validateFieldEl(f, el) {
+    var msgEl = document.getElementById("msg_" + f.id);
+    el.classList.remove("ok", "err");
+    if (msgEl) { msgEl.className = "field-msg"; msgEl.textContent = ""; }
+    var trimmed = el.value.trim();
+
+    if (!trimmed) {
+      if (f.required) {
+        el.classList.add("err");
+        if (msgEl) { msgEl.classList.add("err"); msgEl.textContent = requiredMsg(f); }
+      }
+      return;
+    }
+    if (f.type === "url") {
+      if (!/^https?:\/\/[^\s]+\.[^\s]+/i.test(trimmed)) {
+        el.classList.add("err");
+        if (msgEl) { msgEl.classList.add("err"); msgEl.textContent = "That's missing its https:// — full address like https://acme.com"; }
+      } else {
+        el.classList.add("ok");
+      }
+      return;
+    }
+    if (f.type === "email") {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+        el.classList.add("err");
+        if (msgEl) { msgEl.classList.add("err"); msgEl.textContent = "Doesn't look like an email — try name@company.com"; }
+      } else {
+        el.classList.add("ok");
+      }
+      return;
+    }
+    if (f.id === "f_price") {
+      var n = parseFloat(trimmed);
+      if (isNaN(n) || n < 0) {
+        el.classList.add("err");
+        if (msgEl) { msgEl.classList.add("err"); msgEl.textContent = "Needs to be a plain number, like 49.00 — no currency symbol."; }
+      } else {
+        el.classList.add("ok");
+      }
+      return;
+    }
+    if (f.required) el.classList.add("ok");
+  }
+
+  /* ---------------- dynamic form rendering ---------------- */
+  var faqPairs = [{ q: "", a: "" }, { q: "", a: "" }];
+  var lastSnippet = null;
+  var exampleActive = false;
+
+  function labelHtml(f) {
+    var chip = f.chip ? '<span class="code-chip">' + escapeHtml(f.chip) + "</span>" : "";
+    return '<span class="lab">' + escapeHtml(f.label) + chip + "</span>";
+  }
+
+  function renderFields(type) {
+    var container = document.getElementById("genFields");
+    if (type === "FAQPage") { renderFaqFields(container); return; }
+    var defs = FIELD_DEFS[type] || [];
+    var saved = loadFieldsStore()[type] || {};
+    var html = "";
+    defs.forEach(function (f) {
+      var val = saved[f.id] !== undefined ? saved[f.id] : (f.value || "");
+      html += '<label class="field">' + labelHtml(f);
+      if (f.type === "textarea") {
+        html += '<textarea id="' + f.id + '" placeholder="' + escapeAttr(f.ph || "") + '">' + escapeHtml(val) + "</textarea>";
+      } else if (f.type === "select") {
+        html += '<select id="' + f.id + '">';
+        f.options.forEach(function (opt) {
+          html += '<option value="' + escapeAttr(opt[0]) + '"' + (opt[0] === val ? " selected" : "") + ">" + escapeHtml(opt[1]) + "</option>";
+        });
+        html += "</select>";
+      } else {
+        html += '<input type="' + f.type + '" id="' + f.id + '" placeholder="' + escapeAttr(f.ph || "") + '" value="' + escapeAttr(val) + '">';
+      }
+      html += '<div class="field-msg" id="msg_' + f.id + '" aria-live="polite"></div>';
+      html += "</label>";
+    });
+    container.innerHTML = html;
+    defs.forEach(function (f) {
+      var el = document.getElementById(f.id);
+      var evt = f.type === "select" ? "change" : "input";
+      el.addEventListener(evt, function () {
+        exampleActive = false; hideExampleBadge();
+        renderGenerateOutput(); persistState();
+      });
+      if (f.type !== "select" && f.type !== "textarea") {
+        el.addEventListener("paste", function () {
+          var self = el;
+          setTimeout(function () { self.value = self.value.trim(); }, 0);
+        });
+      }
+      if (f.type !== "select") {
+        el.addEventListener("blur", function () { validateFieldEl(f, el); });
+      }
+    });
+  }
+
+  function renderFaqFields(container) {
+    var html = "";
+    faqPairs.forEach(function (p, i) {
+      html += '<div class="faq-pair" data-idx="' + i + '">' +
+        '<button type="button" class="btn btn-sm faqRemove" data-idx="' + i + '"' + (faqPairs.length <= 1 ? ' style="display:none"' : "") + ">Remove</button>" +
+        '<label class="field"><span class="lab">Question ' + (i + 1) + '<span class="code-chip">name</span></span><input type="text" class="faqQ" data-idx="' + i + '" placeholder="How do I…?" value="' + escapeAttr(p.q) + '"></label>' +
+        '<label class="field"><span class="lab">Answer ' + (i + 1) + '<span class="code-chip">acceptedAnswer.text</span></span><textarea class="faqA" data-idx="' + i + '">' + escapeHtml(p.a) + "</textarea></label>" +
+        "</div>";
+    });
+    html += '<button type="button" class="btn btn-sm" id="faqAddBtn">+ Add question</button>';
+    container.innerHTML = html;
+    Array.prototype.forEach.call(container.querySelectorAll(".faqQ"), function (el) {
+      el.addEventListener("paste", function () {
+        var self = el;
+        setTimeout(function () { self.value = self.value.trim(); }, 0);
+      });
+      el.addEventListener("input", function () {
+        exampleActive = false; hideExampleBadge();
+        faqPairs[parseInt(this.getAttribute("data-idx"), 10)].q = this.value;
+        renderGenerateOutput(); persistState();
+      });
+    });
+    Array.prototype.forEach.call(container.querySelectorAll(".faqA"), function (el) {
+      el.addEventListener("input", function () {
+        exampleActive = false; hideExampleBadge();
+        faqPairs[parseInt(this.getAttribute("data-idx"), 10)].a = this.value;
+        renderGenerateOutput(); persistState();
+      });
+    });
+    Array.prototype.forEach.call(container.querySelectorAll(".faqRemove"), function (el) {
+      el.addEventListener("click", function () {
+        exampleActive = false; hideExampleBadge();
+        faqPairs.splice(parseInt(this.getAttribute("data-idx"), 10), 1);
+        renderFaqFields(container); renderGenerateOutput(); persistState();
+      });
+    });
+    var addBtn = document.getElementById("faqAddBtn");
+    if (addBtn) {
+      addBtn.addEventListener("click", function () {
+        exampleActive = false; hideExampleBadge();
+        faqPairs.push({ q: "", a: "" });
+        renderFaqFields(container); renderGenerateOutput(); persistState();
+      });
+    }
+  }
+
+  /* ---------------- JSON-LD builders ---------------- */
+  function buildLocalBusiness() {
+    var name = readField("f_name");
+    if (!name) return null;
+    var data = { "@context": "https://schema.org", "@type": "LocalBusiness", name: name };
+    var description = readField("f_description"); if (description) data.description = description;
+    var url = readField("f_url"); if (url) data.url = url;
+    var phone = readField("f_phone"); if (phone) data.telephone = phone;
+    var addr = {};
+    var street = readField("f_street"); if (street) addr.streetAddress = street;
+    var city = readField("f_city"); if (city) addr.addressLocality = city;
+    var region = readField("f_region"); if (region) addr.addressRegion = region;
+    var postal = readField("f_postal"); if (postal) addr.postalCode = postal;
+    var country = readField("f_country"); if (country) addr.addressCountry = country;
+    if (Object.keys(addr).length) { addr["@type"] = "PostalAddress"; data.address = addr; }
+    var hours = readField("f_hours"); if (hours) data.openingHours = hours;
+    var pricerange = readField("f_pricerange"); if (pricerange) data.priceRange = pricerange;
+    var sameAs = linesToArray(readField("f_sameas")); if (sameAs.length) data.sameAs = sameAs;
+    return data;
+  }
+
+  function buildProduct() {
+    var name = readField("f_name");
+    var price = readField("f_price");
+    if (!name || !price) return null;
+    var data = { "@context": "https://schema.org", "@type": "Product", name: name };
+    var description = readField("f_description"); if (description) data.description = description;
+    var image = readField("f_image"); if (image) data.image = image;
+    var brand = readField("f_brand"); if (brand) data.brand = { "@type": "Brand", name: brand };
+    var offers = { "@type": "Offer", price: price, priceCurrency: readField("f_currency") || "USD" };
+    var availability = readField("f_availability"); if (availability) offers.availability = "https://schema.org/" + availability;
+    var producturl = readField("f_producturl"); if (producturl) offers.url = producturl;
+    data.offers = offers;
+    return data;
+  }
+
+  function buildFaqPage() {
+    var pairs = faqPairs.filter(function (p) { return p.q.trim() && p.a.trim(); });
+    if (!pairs.length) return null;
+    return {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: pairs.map(function (p) {
+        return { "@type": "Question", name: p.q.trim(), acceptedAnswer: { "@type": "Answer", text: p.a.trim() } };
+      })
+    };
+  }
+
+  function buildPerson() {
+    var name = readField("f_name");
+    if (!name) return null;
+    var data = { "@context": "https://schema.org", "@type": "Person", name: name };
+    var jobtitle = readField("f_jobtitle"); if (jobtitle) data.jobTitle = jobtitle;
+    var company = readField("f_company"); if (company) data.worksFor = { "@type": "Organization", name: company };
+    var url = readField("f_url"); if (url) data.url = url;
+    var image = readField("f_image"); if (image) data.image = image;
+    var email = readField("f_email"); if (email) data.email = email;
+    var sameAs = linesToArray(readField("f_sameas")); if (sameAs.length) data.sameAs = sameAs;
+    return data;
+  }
+
+  function emptyStateMessage(type) {
+    if (type === "Product") return "Enter a product name and price to generate JSON-LD.";
+    if (type === "FAQPage") return "Add at least one question and answer to generate JSON-LD.";
+    if (type === "Person") return "Enter a name to generate JSON-LD.";
+    return "Enter a business name to generate JSON-LD.";
+  }
+
+  /* ---------------- empty states ---------------- */
+  function emptyStateHtml(kind, type) {
+    if (kind === "check") {
+      return '<div class="empty-state">' + toolGlyphHtml() +
+        '<p class="es-line">Waiting on your code.</p>' +
+        '<p class="es-hint">Paste JSON-LD on the left and click Check to get a report.</p>' +
+        '<button type="button" class="try-btn" id="tryExampleBtn2">Try an example</button>' +
+        "</div>";
+    }
+    return '<div class="empty-state">' + toolGlyphHtml() +
+      '<p class="es-line">Nothing to show yet.</p>' +
+      '<p class="es-hint">' + escapeHtml(emptyStateMessage(type)) + "</p>" +
+      '<button type="button" class="try-btn" id="tryExampleBtn2">Try an example</button>' +
+      "</div>";
+  }
+
+  function wireEmptyStateButtons() {
+    var btn = document.getElementById("tryExampleBtn2");
+    if (btn) btn.addEventListener("click", tryExample);
+  }
+
+  /* ---------------- example badge ---------------- */
+  function hideExampleBadge() {
+    var b = document.getElementById("exampleBadge");
+    if (b) b.style.display = "none";
+  }
+
+  function updateExampleBadge() {
+    var b = document.getElementById("exampleBadge");
+    if (!b) return;
+    if (currentMode === "generate" && exampleActive && lastSnippet) {
+      b.textContent = "Example data"; b.style.display = "";
+    } else if (currentMode === "check" && exampleActive) {
+      b.textContent = "Demo snippet"; b.style.display = "";
+    } else {
+      b.style.display = "none";
+    }
+  }
+
+  /* ---------------- rich-result preview ---------------- */
+  function previewCardHtml(type) {
+    var inner;
+    if (type === "FAQPage") {
+      inner = '<div class="pc-url" id="pcUrl"></div>' +
+        '<div class="pc-title" id="pcTitle"></div>' +
+        '<details class="pc-faq"><summary id="pcFaqQ" class="pc-desc"></summary><div id="pcFaqA" class="pc-extra"></div></details>';
+    } else {
+      inner = '<div class="pc-url" id="pcUrl"></div>' +
+        '<div class="pc-title" id="pcTitle"></div>' +
+        '<div class="pc-desc" id="pcDesc"></div>' +
+        '<div class="pc-extra" id="pcExtra"></div>';
+    }
+    return '<div style="padding:0 1.3rem 1.3rem">' +
+      '<div class="lab" style="margin-bottom:8px">How this could look in search</div>' +
+      '<div class="preview-card">' + inner + "</div>" +
+      '<p class="help" style="margin-top:8px">Illustration — actual appearance is up to Google.</p>' +
+      "</div>";
+  }
+
+  function humanizeAvailability(url) {
+    if (!url) return "";
+    var v = String(url).split("/").pop();
+    if (v === "InStock") return "In stock";
+    if (v === "OutOfStock") return "Out of stock";
+    if (v === "PreOrder") return "Pre-order";
+    return v;
+  }
+
+  function renderPreview(type, data) {
+    var elUrl = document.getElementById("pcUrl");
+    var elTitle = document.getElementById("pcTitle");
+    if (!elUrl || !elTitle) return;
+
+    if (type === "FAQPage") {
+      var first = data.mainEntity[0];
+      elUrl.textContent = "yoursite.com";
+      elTitle.textContent = "Frequently asked questions";
+      var q = document.getElementById("pcFaqQ");
+      var a = document.getElementById("pcFaqA");
+      if (q) q.textContent = first.name;
+      if (a) a.textContent = first.acceptedAnswer.text + (data.mainEntity.length > 1 ? "  (+" + (data.mainEntity.length - 1) + " more)" : "");
+      return;
+    }
+
+    var elDesc = document.getElementById("pcDesc");
+    var elExtra = document.getElementById("pcExtra");
+
+    if (type === "Product") {
+      elUrl.textContent = (data.offers && data.offers.url) || "yoursite.com";
+      elTitle.textContent = data.name;
+      elDesc.textContent = data.description || "";
+      elDesc.style.display = data.description ? "" : "none";
+      var bits = [];
+      if (data.offers) {
+        bits.push(data.offers.price + " " + data.offers.priceCurrency);
+        var avail = humanizeAvailability(data.offers.availability);
+        if (avail) bits.push(avail);
+      }
+      elExtra.textContent = bits.join(" · ");
+      elExtra.style.display = bits.length ? "" : "none";
+      return;
+    }
+
+    if (type === "LocalBusiness") {
+      elUrl.textContent = data.url || "yoursite.com";
+      elTitle.textContent = data.name;
+      elDesc.textContent = data.description || "";
+      elDesc.style.display = data.description ? "" : "none";
+      var addrBits = [];
+      if (data.address) {
+        [data.address.streetAddress, data.address.addressLocality, data.address.addressRegion].forEach(function (p) { if (p) addrBits.push(p); });
+      }
+      var extraBits = [];
+      if (addrBits.length) extraBits.push(addrBits.join(", "));
+      if (data.openingHours) extraBits.push(data.openingHours);
+      elExtra.textContent = extraBits.join(" · ");
+      elExtra.style.display = extraBits.length ? "" : "none";
+      return;
+    }
+
+    if (type === "Person") {
+      elUrl.textContent = data.url || "yoursite.com";
+      elTitle.textContent = data.name;
+      var role = data.jobTitle || "";
+      if (role && data.worksFor && data.worksFor.name) role += " at " + data.worksFor.name;
+      elDesc.textContent = role;
+      elDesc.style.display = role ? "" : "none";
+      elExtra.textContent = "";
+      elExtra.style.display = "none";
+    }
+  }
+
+  /* ---------------- bench-head + mobile action bar ---------------- */
+  function doCopy() { if (lastSnippet) JB.copy(lastSnippet, "JSON-LD copied — paste it into your page's <head>"); }
+  function doDownload() {
+    if (!lastSnippet) return;
+    var type = document.getElementById("schemaType").value;
+    JB.download("json-ld-" + type.toLowerCase() + ".html", lastSnippet, "text/html;charset=utf-8");
+  }
+
+  function renderBenchActions() {
+    var el = document.getElementById("benchActions");
+    if (!el) return;
+    if (currentMode !== "generate" || !lastSnippet) { el.innerHTML = ""; return; }
+    el.innerHTML =
+      '<button type="button" class="btn btn-sm btn-ghost" id="copyBtn">' + ICON_COPY + "Copy code</button>" +
+      '<button type="button" class="btn btn-sm btn-ghost" id="downloadBtn">' + ICON_DOWNLOAD + "Download file</button>";
+    document.getElementById("copyBtn").addEventListener("click", doCopy);
+    document.getElementById("downloadBtn").addEventListener("click", doDownload);
+  }
+
+  function renderActionBar() {
+    var bar = document.getElementById("actionBar");
+    if (!bar) return;
+    if (currentMode === "generate") {
+      if (lastSnippet) {
+        bar.innerHTML =
+          '<button type="button" class="btn btn-primary" id="abCopyBtn">' + ICON_COPY + "Copy code</button>" +
+          '<button type="button" class="btn" id="abDownloadBtn">' + ICON_DOWNLOAD + "Download file</button>";
+        document.getElementById("abCopyBtn").addEventListener("click", doCopy);
+        document.getElementById("abDownloadBtn").addEventListener("click", doDownload);
+        bar.style.display = "";
+        document.body.classList.add("has-action-bar");
+      } else {
+        bar.innerHTML = "";
+        bar.style.display = "none";
+        document.body.classList.remove("has-action-bar");
+      }
+    } else {
+      bar.innerHTML = '<button type="button" class="btn btn-primary" id="abCheckBtn">' + ICON_CHECK + "Check code</button>";
+      document.getElementById("abCheckBtn").addEventListener("click", function () { runCheck(); });
+      bar.style.display = "";
+      document.body.classList.add("has-action-bar");
+    }
+  }
+
+  /* ---------------- generate output ---------------- */
+  function renderGenerateOutput() {
+    var type = document.getElementById("schemaType").value;
+    var data = null;
+    if (type === "LocalBusiness") data = buildLocalBusiness();
+    else if (type === "Product") data = buildProduct();
+    else if (type === "FAQPage") data = buildFaqPage();
+    else if (type === "Person") data = buildPerson();
+
+    var outBody = document.getElementById("outBody");
+    var outMeta = document.getElementById("outMeta");
+
+    if (!data) {
+      lastSnippet = null;
+      outMeta.textContent = "";
+      outBody.innerHTML = emptyStateHtml("generate", type);
+      wireEmptyStateButtons();
+      renderBenchActions();
+      updateExampleBadge();
+      renderActionBar();
+      return;
+    }
+
+    var json = JSON.stringify(data, null, 2);
+    var snippet = '<script type="application/ld+json">\n' + json + "\n<\/script>";
+    lastSnippet = snippet;
+    outMeta.textContent = type;
+    outBody.innerHTML =
+      '<div class="codebox"><pre id="outputPre"></pre></div>' +
+      '<p class="help" style="padding:1rem 1.3rem 0">Paste this into your page’s &lt;head&gt;.</p>' +
+      previewCardHtml(type);
+    document.getElementById("outputPre").textContent = snippet;
+    renderPreview(type, data);
+    renderBenchActions();
+    updateExampleBadge();
+    renderActionBar();
+  }
+
+  /* ---------------- check mode ---------------- */
+  function stripScriptTag(raw) {
+    var text = (raw || "").trim();
+    var m = /<script[^>]*>([\s\S]*?)<\/script>/i.exec(text);
+    if (m) return m[1].trim();
+    return text;
+  }
+
+  function describeJsonError(e, text) {
+    var msg = e && e.message ? e.message : String(e);
+    var m = /position (\d+)/.exec(msg);
+    if (m) {
+      var pos = parseInt(m[1], 10);
+      var upto = text.slice(0, pos);
+      var line = upto.split("\n").length;
+      var col = pos - upto.lastIndexOf("\n");
+      return "At character " + pos + " (line " + line + ", column " + col + "): " + msg;
+    }
+    return msg;
+  }
+
+  function sevLabel(sev) { return sev === "pass" ? "PASS" : (sev === "warn" ? "WARN" : "FAIL"); }
+  function chipClass(sev) { return sev === "pass" ? "ok" : (sev === "warn" ? "warn" : "bad"); }
+
+  function renderReportSection(title, items) {
+    var html = "";
+    if (title) html += '<h3 style="font-size:1.05rem;margin:0 0 .6rem">' + escapeHtml(title) + "</h3>";
+    items.forEach(function (it) {
+      html += '<div class="check-item"><span class="tag ' + chipClass(it.sev) + '">' + sevLabel(it.sev) + '</span><div class="body"><div class="label">' + escapeHtml(it.label) + "</div>" +
+        (it.detail ? '<div class="detail">' + escapeHtml(it.detail) + "</div>" : "") +
+        (it.sev === "fail" && it.fix ? '<div class="detail fix">Fix: ' + escapeHtml(it.fix) + "</div>" : "") +
+        "</div></div>";
+    });
+    html += '<div style="height:1.2rem"></div>';
+    return html;
+  }
+
+  function checkProduct(node) {
+    var items = [];
+    if (node.name) items.push({ sev: "pass", label: "Has name" });
+    else items.push({ sev: "fail", label: "Has name", fix: "Add a \"name\" field — it becomes the product title in search." });
+
+    var offers = node.offers ? (Array.isArray(node.offers) ? node.offers : [node.offers]) : [];
+    var offersOk = offers.length > 0 && offers.every(function (o) { return o && o.price !== undefined && o.price !== null && o.priceCurrency; });
+    if (offersOk) items.push({ sev: "pass", label: "Has offers with price + priceCurrency" });
+    else if (offers.length) items.push({ sev: "fail", label: "Has offers with price + priceCurrency", detail: "offers is present but missing price or priceCurrency.", fix: "Add priceCurrency (e.g. \"USD\") next to price inside offers." });
+    else items.push({ sev: "fail", label: "Has offers with price + priceCurrency", detail: "No offers field found.", fix: "Add an \"offers\" object with price and priceCurrency." });
+
+    if (node.image) items.push({ sev: "pass", label: "Has image (recommended)" });
+    else items.push({ sev: "warn", label: "Image is missing (recommended)" });
+    return items;
+  }
+
+  function checkFaqPage(node) {
+    var items = [];
+    var q = Array.isArray(node.mainEntity) ? node.mainEntity : null;
+    if (q && q.length) {
+      var allOk = q.every(function (item) {
+        return item && item["@type"] === "Question" && item.name && item.acceptedAnswer && item.acceptedAnswer.text;
+      });
+      if (allOk) items.push({ sev: "pass", label: "mainEntity is an array of Question with acceptedAnswer.text" });
+      else items.push({ sev: "fail", label: "mainEntity is an array of Question with acceptedAnswer.text", detail: "One or more entries are missing @type: Question, name, or acceptedAnswer.text.", fix: "Give every entry \"@type\": \"Question\", a name, and acceptedAnswer.text." });
+    } else {
+      items.push({ sev: "fail", label: "mainEntity is a non-empty array of Questions", detail: "No mainEntity array found.", fix: "Add a mainEntity array with at least one Question." });
+    }
+    return items;
+  }
+
+  function checkLocalBusiness(node) {
+    var items = [];
+    if (node.name) items.push({ sev: "pass", label: "Has name" });
+    else items.push({ sev: "fail", label: "Has name", fix: "Add a \"name\" field with the business name." });
+    if (node.address) items.push({ sev: "pass", label: "Has address (recommended)" });
+    else items.push({ sev: "warn", label: "Address is missing (recommended)" });
+    if (node.telephone) items.push({ sev: "pass", label: "Has telephone (recommended)" });
+    else items.push({ sev: "warn", label: "Telephone is missing (recommended)" });
+    return items;
+  }
+
+  function checkPerson(node) {
+    if (node.name) return [{ sev: "pass", label: "Has name" }];
+    return [{ sev: "fail", label: "Has name", fix: "Add a \"name\" field." }];
+  }
+
+  function checkOrganization(node) {
+    var items = [];
+    if (node.name) items.push({ sev: "pass", label: "Has name" });
+    else items.push({ sev: "fail", label: "Has name", fix: "Add a \"name\" field with the organization's name." });
+    if (node.url) items.push({ sev: "pass", label: "Has url (recommended)" });
+    else items.push({ sev: "warn", label: "URL is missing (recommended)" });
+    return items;
+  }
+
+  function checkNode(node, sharedContext) {
+    var items = [];
+    if (!node || typeof node !== "object") {
+      items.push({ sev: "fail", label: "Node is a JSON object", detail: "Expected an object, found " + typeof node + ".", fix: "Make sure the pasted value is a single JSON object, or an array of them." });
+      return items;
+    }
+    var ctx = node["@context"] || sharedContext;
+    var ctxStr = typeof ctx === "string" ? ctx : (ctx && ctx["@vocab"]) || (ctx ? JSON.stringify(ctx) : "");
+    if (ctx && String(ctxStr).indexOf("schema.org") !== -1) {
+      items.push({ sev: "pass", label: "@context includes schema.org" });
+    } else {
+      items.push({ sev: "fail", label: "@context includes schema.org", detail: ctx ? "Found @context but it doesn't reference schema.org." : "No @context found.", fix: "Add \"@context\": \"https://schema.org\" at the top level." });
+    }
+
+    var type = node["@type"];
+    if (!type) {
+      items.push({ sev: "fail", label: "@type is set", detail: "No @type found on this node.", fix: "Add an \"@type\" like \"Product\", \"LocalBusiness\", \"FAQPage\", or \"Person\"." });
+      return items;
+    }
+    items.push({ sev: "pass", label: "@type is set", detail: Array.isArray(type) ? type.join(", ") : String(type) });
+
+    var types = Array.isArray(type) ? type : [type];
+    var known = false;
+    types.forEach(function (t) {
+      if (t === "Product") { known = true; items = items.concat(checkProduct(node)); }
+      else if (t === "FAQPage") { known = true; items = items.concat(checkFaqPage(node)); }
+      else if (t === "LocalBusiness") { known = true; items = items.concat(checkLocalBusiness(node)); }
+      else if (t === "Person") { known = true; items = items.concat(checkPerson(node)); }
+      else if (t === "Organization") { known = true; items = items.concat(checkOrganization(node)); }
+    });
+    if (!known) {
+      items.push({ sev: "warn", label: "Unrecognized type — only structural checks were run", detail: "This checker knows Product, FAQPage, LocalBusiness, Person, and Organization in depth. \"" + types.join(", ") + "\" only gets the checks above." });
+    }
+    return items;
+  }
+
+  function finishCheckRender() {
+    lastSnippet = null;
+    renderBenchActions();
+    updateExampleBadge();
+    renderActionBar();
+  }
+
+  function runCheck() {
+    var raw = document.getElementById("checkInput").value;
+    var stripped = stripScriptTag(raw);
+    var outBody = document.getElementById("outBody");
+    var outMeta = document.getElementById("outMeta");
+    outMeta.textContent = "Report";
+
+    if (!stripped) {
+      outBody.innerHTML = '<div style="padding:1.3rem">' + renderReportSection(null, [{ sev: "fail", label: "Valid JSON", detail: "The box is empty — paste some JSON-LD first." }]) + "</div>";
+      finishCheckRender();
+      return;
+    }
+
+    var parsed;
+    try {
+      parsed = JSON.parse(stripped);
+    } catch (e) {
+      outBody.innerHTML = '<div style="padding:1.3rem">' + renderReportSection(null, [{ sev: "fail", label: "Valid JSON", detail: describeJsonError(e, stripped) }]) + "</div>";
+      finishCheckRender();
+      return;
+    }
+
+    var sharedContext = (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed["@context"] : null;
+    var nodes;
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed) && Array.isArray(parsed["@graph"])) {
+      nodes = parsed["@graph"];
+    } else if (Array.isArray(parsed)) {
+      nodes = parsed;
+    } else {
+      nodes = [parsed];
+    }
+
+    var html = renderReportSection(null, [{ sev: "pass", label: "Valid JSON" }]);
+    nodes.forEach(function (node, i) {
+      var title = nodes.length > 1 ? "Node " + (i + 1) + (node && node["@type"] ? " — " + node["@type"] : "") : null;
+      html += renderReportSection(title, checkNode(node, sharedContext));
+    });
+    outBody.innerHTML = '<div style="padding:1.3rem">' + html + "</div>";
+    finishCheckRender();
+  }
+
+  function renderCheckEmptyState() {
+    document.getElementById("outMeta").textContent = "";
+    document.getElementById("outBody").innerHTML = emptyStateHtml("check");
+    wireEmptyStateButtons();
+    finishCheckRender();
+  }
+
+  /* ---------------- try an example ---------------- */
+  var EXAMPLE_PRODUCT = {
+    f_name: "Trail Runner 2.0",
+    f_description: "Lightweight trail running shoe with a reinforced toe cap and grippy outsole.",
+    f_image: "https://example.com/trail-runner.jpg",
+    f_brand: "Acme Outdoors",
+    f_price: "129.00",
+    f_currency: "USD",
+    f_availability: "InStock",
+    f_producturl: "https://example.com/products/trail-runner-2-0"
+  };
+
+  var DEMO_CHECK_SNIPPET = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: "Trail Runner 2.0",
+    offers: { "@type": "Offer", price: "129.00" }
+  }, null, 2);
+
+  function tryExample() {
+    if (currentMode === "generate") {
+      schemaTypeEl.value = "Product";
+      renderFields("Product");
+      var defs = FIELD_DEFS.Product;
+      defs.forEach(function (f) {
+        var el = document.getElementById(f.id);
+        if (el && EXAMPLE_PRODUCT[f.id] !== undefined) el.value = EXAMPLE_PRODUCT[f.id];
+      });
+      defs.forEach(function (f) {
+        var el = document.getElementById(f.id);
+        if (el) validateFieldEl(f, el);
+      });
+      exampleActive = true;
+      renderGenerateOutput();
+      persistState();
+    } else {
+      document.getElementById("checkInput").value = DEMO_CHECK_SNIPPET;
+      exampleActive = true;
+      runCheck();
+      JB.toast("Demo snippet loaded — it's intentionally missing a field");
+    }
+  }
+
+  /* ---------------- mode switch ---------------- */
+  var currentMode = "generate";
+  function setMode(mode) {
+    currentMode = mode;
+    document.getElementById("modeGenBtn").classList.toggle("active", mode === "generate");
+    document.getElementById("modeGenBtn").setAttribute("aria-selected", mode === "generate" ? "true" : "false");
+    document.getElementById("modeCheckBtn").classList.toggle("active", mode === "check");
+    document.getElementById("modeCheckBtn").setAttribute("aria-selected", mode === "check" ? "true" : "false");
+    document.getElementById("genPanel").style.display = mode === "generate" ? "" : "none";
+    document.getElementById("checkPanel").style.display = mode === "check" ? "" : "none";
+    if (mode === "generate") renderGenerateOutput();
+    else renderCheckEmptyState();
+    persistState();
+  }
+
+  /* ---------------- init ---------------- */
+  var schemaTypeEl = document.getElementById("schemaType");
+  var savedType = null;
+  try { savedType = localStorage.getItem("jbt.jsonld.type"); } catch (e) {}
+  if (!savedType || FREE_TYPES.indexOf(savedType) === -1) savedType = "LocalBusiness";
+  schemaTypeEl.value = savedType;
+
+  try {
+    var rawFaq = localStorage.getItem("jbt.jsonld.faq");
+    var pf = rawFaq ? JSON.parse(rawFaq) : null;
+    if (pf && pf.length) faqPairs = pf;
+  } catch (e) { /* ignore */ }
+
+  renderFields(savedType);
+
+  schemaTypeEl.addEventListener("change", function () {
+    exampleActive = false; hideExampleBadge();
+    renderFields(this.value);
+    renderGenerateOutput();
+    persistState();
+  });
+  document.getElementById("modeGenBtn").addEventListener("click", function () { setMode("generate"); });
+  document.getElementById("modeCheckBtn").addEventListener("click", function () { setMode("check"); });
+  document.getElementById("checkBtn").addEventListener("click", runCheck);
+  document.getElementById("tryExampleBtn").addEventListener("click", tryExample);
+
+  document.getElementById("checkInput").addEventListener("paste", function () {
+    var self = this;
+    setTimeout(function () { self.value = self.value.trim(); }, 0);
+  });
+  document.getElementById("checkInput").addEventListener("input", function () {
+    exampleActive = false;
+    updateExampleBadge();
+  });
+
+  /* first-run hint */
+  var HINT_KEY = "jbt.jsonld.hinted";
+  var hintEl = document.getElementById("hintOnce");
+  try {
+    if (!localStorage.getItem(HINT_KEY)) hintEl.style.display = "";
+  } catch (e) { hintEl.style.display = ""; }
+  document.getElementById("hintCloseBtn").addEventListener("click", function () {
+    hintEl.style.display = "none";
+    try { localStorage.setItem(HINT_KEY, "1"); } catch (e) {}
+  });
+
+  var savedMode = "generate";
+  try { savedMode = localStorage.getItem("jbt.jsonld.mode") || "generate"; } catch (e) {}
+  setMode(savedMode === "check" ? "check" : "generate");
+})();
+</script>
+</body>
+</html>
