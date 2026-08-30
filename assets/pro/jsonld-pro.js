@@ -375,8 +375,12 @@
       (f.help ? '<div class="help">' + esc(f.help) + "</div>" : "") + "</label>";
   }
 
+  function serializeJsonForHtmlScript(data) {
+    return JSON.stringify(data, null, 2).replace(/</g, "\\u003c");
+  }
+
   function snippetFor(data) {
-    return '<script type="application/ld+json">\n' + JSON.stringify(data, null, 2) + "\n<\/script>";
+    return '<script type="application/ld+json">\n' + serializeJsonForHtmlScript(data) + "\n<\/script>";
   }
 
   var lastSnippet = "";
