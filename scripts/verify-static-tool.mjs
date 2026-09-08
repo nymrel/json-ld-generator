@@ -65,7 +65,7 @@ check(!/the tool makes no server calls/i.test(`${html}\n${readme}`), "privacy co
 check(!/never sent to a server/i.test(html), "page privacy copy must not make an absolute transport claim");
 
 // Ignore script source while inspecting IDs; do not transform HTML as if sanitized.
-const scriptRanges = [...html.matchAll(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi)]
+const scriptRanges = [...html.matchAll(/<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi)]
   .map((match) => [match.index, match.index + match[0].length]);
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)]
   .filter((match) => !scriptRanges.some(([start, end]) => match.index >= start && match.index < end))
