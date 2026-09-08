@@ -78,7 +78,7 @@
           "name": "Is my data safe?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. Everything runs in your browser — the JSON-LD you generate or paste is never sent to a server or stored anywhere but your own device."
+            "text": "Generated or pasted JSON-LD is processed locally and may be stored in your browser. Product values are not attached to network requests. The hosted page also loads aggregate Vercel Web Analytics."
           }
         },
         {
@@ -288,7 +288,7 @@
           <li>Generate LocalBusiness, Product, FAQPage, Person</li>
           <li>Check any JSON-LD for errors and warnings</li>
           <li>Copy or download the script block instantly</li>
-          <li>Runs entirely in your browser — nothing sent anywhere</li>
+          <li>Generation and checking run in your browser; drafts may be stored locally</li>
         </ul>
       </div>
       <div class="price-card featured">
@@ -313,7 +313,7 @@
     <div class="faq">
       <details>
         <summary>Is my data safe?</summary>
-        <p class="a">Yes. Everything runs in your browser — the JSON-LD you generate or paste is never sent to a server or stored anywhere but your own device.</p>
+        <p class="a">Generated or pasted JSON-LD is processed locally and may be stored in your browser. Product values are not attached to network requests. The hosted page also loads aggregate Vercel Web Analytics.</p>
       </details>
       <details>
         <summary>Do I need to know JSON to use this?</summary>
@@ -339,7 +339,7 @@
   <div class="wrap cols">
     <div>
       <p class="fh">Nymrel Tools</p>
-      <p style="max-width:26em">Small, sharp tools from a working studio. Everything runs in your browser; nothing you paste leaves your device.</p>
+      <p style="max-width:26em">Small, sharp tools from a working studio. Generation and checking happen in your browser; the hosted page also loads aggregate Vercel Web Analytics.</p>
       <p class="mono" style="font-size:0.78rem">© <span data-year>2026</span> JalenBuilds LLC</p>
       <p class="mono" style="font-size:0.78rem"><a href="https://nymrel.com?utm_source=jalenbuilds-tools&amp;utm_medium=footer-credit&amp;utm_campaign=built-by-nymrel" rel="author">Built by Nymrel</a></p>
     </div>
@@ -858,6 +858,10 @@
     }
   }
 
+  function serializeJsonForHtmlScript(data) {
+    return JSON.stringify(data, null, 2).replace(/</g, "\\u003c");
+  }
+
   /* ---------------- generate output ---------------- */
   function renderGenerateOutput() {
     var type = document.getElementById("schemaType").value;
@@ -881,7 +885,7 @@
       return;
     }
 
-    var json = JSON.stringify(data, null, 2);
+    var json = serializeJsonForHtmlScript(data);
     var snippet = '<script type="application/ld+json">\n' + json + "\n<\/script>";
     lastSnippet = snippet;
     outMeta.textContent = type;

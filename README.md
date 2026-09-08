@@ -1,7 +1,7 @@
 # JSON-LD Studio
 
 Generate schema.org structured data for your pages, or check the markup you already
-have. Runs entirely in your browser.
+have. Generation and checking run in your browser.
 
 **Use it:** https://nymrel.com/tools/json-ld-generator
 
@@ -40,7 +40,7 @@ disk will render unstyled.
 | `assets/checkout-config.js` | The checkout registry template |
 | `assets/fonts/` | The three fonts the page uses |
 
-`tools/json-ld-generator/index.html` is byte-for-byte the file nymrel.com serves.
+`tools/json-ld-generator/index.html` is the source intended for Nymrel's canonical JSON-LD Studio surface. This repository alone does not verify the current deployed bytes.
 
 ## A note on the paid tier
 
@@ -48,9 +48,22 @@ The page offers a paid tier. `assets/checkout-config.js` here is the committed t
 with no payment links set, so in a local copy the upgrade button falls back to email.
 The free generator produces valid markup on its own.
 
-## Privacy
+## Privacy and local state
 
-Nothing you type leaves your browser. The tool makes no server calls.
+Generated and pasted JSON-LD is processed locally and may be saved in your browser's
+local storage so a draft survives a reload. Product values are not attached to network
+requests. The hosted page also loads aggregate Vercel Web Analytics; a local copy does
+not load that endpoint successfully unless the host provides it.
+
+Generated script blocks escape literal `<` characters inside JSON values as `\u003c`.
+`JSON.parse` restores the original value, while the encoded source remains safe to paste
+inside an HTML `application/ld+json` script element.
+
+## Verification
+
+Node 24.20.0 and npm 11.19.1 are the primary verification runtime; CI also exercises
+Node 22.12.0. Run `npm ci --ignore-scripts`, install Chromium once with
+`npx playwright install chromium`, then run `npm run check`.
 
 ## Credits
 
@@ -59,7 +72,8 @@ Font License.
 
 ## Who built it
 
-[Nymrel](https://nymrel.com) — a software studio that builds and runs its own products.
+[Nymrel](https://nymrel.com) — we build and run products, services, websites, software,
+and apps.
 
 ## License
 
