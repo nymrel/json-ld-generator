@@ -64,8 +64,12 @@ check(/local storage/i.test(`${html}\n${readme}\n${security}`), "local persisten
 check(!/the tool makes no server calls/i.test(`${html}\n${readme}`), "privacy copy must not deny all server requests");
 check(!/never sent to a server/i.test(html), "page privacy copy must not make an absolute transport claim");
 
-const staticMarkup = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
-const ids = [...staticMarkup.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
+// Ignore script source while inspecting IDs; do not transform HTML as if sanitized.
+const scriptRanges = [...html.matchAll(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi)]
+  .map((match) => [match.index, match.index + match[0].length]);
+const ids = [...html.matchAll(/\bid="([^"]+)"/g)]
+  .filter((match) => !scriptRanges.some(([start, end]) => match.index >= start && match.index < end))
+  .map((match) => match[1]);
 const duplicateIds = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
 check(duplicateIds.length === 0, `duplicate element ids: ${duplicateIds.join(", ")}`);
 
