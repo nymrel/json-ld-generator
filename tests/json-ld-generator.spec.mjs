@@ -97,6 +97,39 @@ test("downloads the guarded JSON-LD script block", async ({ page }) => {
   expect(parseGeneratedSnippet(content).name).toBe(hostileName);
 });
 
+test("reports empty node collections without treating valid JSON as complete markup", async ({ page }) => {
+  await page.locator("#modeCheckBtn").click();
+  for (const value of [[], { "@context": "https://schema.org", "@graph": [] }]) {
+    await page.locator("#checkInput").fill(JSON.stringify(value));
+    await page.locator("#checkBtn").click();
+    await expect(page.locator("#outBody")).toContainText("Valid JSON");
+    await expect(page.locator("#outBody")).toContainText("No JSON-LD nodes found");
+    await expect(page.locator("#outBody .tag.bad")).toHaveCount(1);
+  }
+});
+
+test("checks a typed root as a node alongside its graph", async ({ page }) => {
+  await page.locator("#modeCheckBtn").click();
+  for (const graph of [[], [{ "@type": "Person", name: "Example person" }]]) {
+    const root = {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "Example organization",
+      url: "https://example.invalid/",
+      "@graph": graph,
+    };
+    await page.locator("#checkInput").fill(JSON.stringify(root));
+    await page.locator("#checkBtn").click();
+    await expect(page.locator("#outBody .tag.bad")).toHaveCount(0);
+
+    delete root.name;
+    await page.locator("#checkInput").fill(JSON.stringify(root));
+    await page.locator("#checkBtn").click();
+    await expect(page.locator("#outBody .tag.bad")).toHaveCount(1);
+    await expect(page.locator("#outBody")).toContainText("organization's name");
+  }
+});
+
 test("has no serious accessibility violations after generation", async ({ page }) => {
   await fillProduct(page);
   const results = await new AxeBuilder({ page }).analyze();
