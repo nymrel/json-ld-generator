@@ -1069,6 +1069,9 @@
     }
 
     var html = renderReportSection(null, [{ sev: "pass", label: "Valid JSON" }]);
+    if (!nodes.length) {
+      html += renderReportSection(null, [{ sev: "fail", label: "No JSON-LD nodes found", detail: "The JSON parses, but this collection contains no nodes to check.", fix: "Add at least one JSON-LD object to the array or @graph." }]);
+    }
     nodes.forEach(function (node, i) {
       var title = nodes.length > 1 ? "Node " + (i + 1) + (node && node["@type"] ? " — " + node["@type"] : "") : null;
       html += renderReportSection(title, checkNode(node, sharedContext));
