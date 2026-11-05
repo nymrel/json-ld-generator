@@ -15,7 +15,8 @@ back markup you paste in and tell you what is wrong with it.
 No account, no email gate, no trial clock.
 
 The checker reports JSON syntax separately from markup structure. An empty array or
-`@graph` is valid JSON, but contains no JSON-LD nodes to check and is flagged as incomplete.
+empty graph wrapper contains no nodes to check and is flagged as incomplete. A typed
+root is checked along with its graph entries, even when its `@graph` is empty.
 
 ## Run it locally
 

@@ -1061,7 +1061,7 @@
     var sharedContext = (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed["@context"] : null;
     var nodes;
     if (parsed && typeof parsed === "object" && !Array.isArray(parsed) && Array.isArray(parsed["@graph"])) {
-      nodes = parsed["@graph"];
+      nodes = parsed["@type"] ? [parsed].concat(parsed["@graph"]) : parsed["@graph"];
     } else if (Array.isArray(parsed)) {
       nodes = parsed;
     } else {
