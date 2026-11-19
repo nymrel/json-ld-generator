@@ -14,6 +14,10 @@ back markup you paste in and tell you what is wrong with it.
 
 No account, no email gate, no trial clock.
 
+The checker reports JSON syntax separately from markup structure. An empty array or
+empty graph wrapper contains no nodes to check and is flagged as incomplete. A typed
+root is checked along with its graph entries, even when its `@graph` is empty.
+
 ## Run it locally
 
 No build step and no dependencies. It is a static page.
@@ -68,7 +72,8 @@ Node 22.12.0. Run `npm ci --ignore-scripts`, install Chromium once with
 ## Credits
 
 Instrument Serif, Instrument Sans, and IBM Plex Mono are used under the SIL Open
-Font License.
+Font License. Their [copyright notices, license texts, and asset inventory](assets/fonts/README.md)
+are included with the bundled fonts.
 
 ## Who built it
 
